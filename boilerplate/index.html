@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apresentação FabSlides</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="main.js"></script>
+</head>
+<body>
+
+  <!-- 1. INDICADOR LATERAL DE PÁGINA (OPCIONAL) -->
+  <div class="indicator-container" style="opacity:0; pointer-events:none;">
+    <ul class="indicator">
+      <li class="indicator-index expand" data-target-index="0"><span class="indicator-number">01</span></li>
+      <li class="indicator-line"></li>
+      <li class="indicator-index" data-target-index="1"><span class="indicator-number">02</span></li>
+      <li class="indicator-line"></li>
+      <li class="indicator-index" data-target-index="2"><span class="indicator-number">03</span></li>
+    </ul>
+  </div>
+
+  <!-- 2. CONTAINER DE SLIDES (SCROLL SNAP) -->
+  <div class="slides-wrapper">
+
+    <!-- SLIDE 1: CAPA (Fundo Escuro) -->
+    <section class="slide-section dark" id="slide-01" data-index="0">
+      <div class="hero-wrapper" data-content>
+        <p class="hero-subtitle">Boilerplate do Motor FabSlides</p>
+        <h1 class="hero-title">
+          Minha Nova Apresentação
+          <span>Desenvolvido Pareado com IA</span>
+        </h1>
+        <div class="hero-meta">
+          <div>
+            Apresentador
+            <strong>Fábio Leites</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: CONTEÚDO COM PASSOS (Fundo Claro) -->
+    <section class="slide-section" id="slide-02" data-index="1">
+      <div class="slide-frame">
+        <header class="slide-header">
+          <p class="slide-category">02 · Exemplo Prático</p>
+          <h2 class="slide-title">Storytelling por Passos</h2>
+        </header>
+
+        <div class="slide-content-area" data-content>
+          <div class="numbers-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; width:100%; max-width:1100px;">
+            <div class="stat-card" data-step="1">
+              <p class="stat-num">Passo 1</p>
+              <p class="stat-label">Primeira Revelação</p>
+              <p class="stat-desc">Este bloco surge na tela na primeira ação de setas horizontais do teclado.</p>
+            </div>
+            <div class="stat-card" data-step="2">
+              <p class="stat-num">Passo 2</p>
+              <p class="stat-label">Segunda Revelação</p>
+              <p class="stat-desc">Este bloco aparece sequencialmente na tela após o próximo clique da seta direita.</p>
+            </div>
+            <div class="stat-card" data-step="3">
+              <p class="stat-num">Passo 3</p>
+              <p class="stat-label">Terceira Revelação</p>
+              <p class="stat-desc">O slide atinge seu estágio final antes de avançar para a próxima página.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: FUSÃO E SÍNTESE (Fundo Escuro) -->
+    <section class="slide-section dark" id="slide-03" data-index="2">
+      <div class="slide-frame">
+        <header class="slide-header">
+          <p class="slide-category">03 · Conclusão</p>
+          <h2 class="slide-title">Síntese e Referências</h2>
+        </header>
+
+        <div class="slide-content-area" data-content>
+          <div class="sintese-wrapper" style="display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; width:100%; max-width:1100px;">
+            <div class="sintese-col" data-step="1">
+              <h3 class="sintese-col-title">Resumo do Ecossistema</h3>
+              <ul class="sintese-list">
+                <li><strong>Eficiente:</strong> Construído sob arquitetura leve e desacoplada para otimização de tokens.</li>
+                <li><strong>Responsivo:</strong> Adaptação geométrica automática no painel do apresentador.</li>
+                <li><strong>Sincronizado:</strong> Sistema multi-dispositivo operando via WebSockets.</li>
+              </ul>
+            </div>
+            <div class="sintese-col" data-step="2">
+              <h3 class="sintese-col-title">Referências</h3>
+              <div class="ref-list" style="display:flex; flex-direction:column; gap: 1rem;">
+                <div class="ref-item">
+                  <strong>FABSLIDES (2026)</strong>
+                  <span>Manual de Arquitetura e Autoevolução de Lógica. Bento Gonçalves, RS.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>

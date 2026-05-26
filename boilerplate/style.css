@@ -1,0 +1,309 @@
+/* ==========================================================================
+   🎨 FABSLIDES DESIGN SYSTEM - BOILERPLATE CORE STYLES
+   ========================================================================== */
+
+/* 1. Design Tokens (Variáveis Globais HSL) */
+:root {
+  /* Cores Principais (Creme & Marinho Premium) */
+  --color-bg-paper: #FDFBF8;         /* Creme suave envelhecido */
+  --color-navy: #0B1E36;             /* Azul marinho intenso */
+  --color-orange: #E05A10;           /* Laranja moderno vibrante (sotaque) */
+  --color-green: #6D8762;            /* Verde moscatel sutil */
+  --color-gray-dark: #2F3E50;
+  --color-gray-light: #5A6E85;
+  --color-border: rgba(11,30,54,0.08);
+  --color-border-dark: rgba(240,237,232,0.15);
+  --color-card-bg: #FFFFFF;
+  --color-card-bg-dark: rgba(11,30,54,0.4);
+
+  /* Tipografia Monumental */
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Transições Aceleradas por GPU */
+  --transition-step: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-fade: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* 2. Reset Geral de Navegador */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+body, html {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--color-bg-paper);
+  font-family: var(--font-sans);
+  color: var(--color-navy);
+}
+
+/* 3. Motor Scroll-Snap (Navegação Macropaginada) */
+.slides-wrapper {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+  width: 100vw;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+}
+.slides-wrapper::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Seção de Slide Base */
+.slide-section {
+  scroll-snap-align: start;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-bg-paper);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.8s ease, color 0.8s ease;
+}
+
+/* Slide com Visual Escuro (Estilo cbrands) */
+.slide-section.dark {
+  background-color: var(--color-navy);
+  color: #F0EDE8;
+}
+
+/* 4. Molduras e Grids de Layout */
+.slide-frame {
+  width: 100%;
+  height: 100%;
+  padding: 4.5rem 6% 3.5rem 6%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  z-index: 10;
+}
+
+.slide-header {
+  margin-bottom: 2rem;
+}
+.slide-category {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  color: var(--color-orange);
+  margin-bottom: 0.4rem;
+}
+.slide-title {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.slide-section.dark .slide-title {
+  color: #FFFFFF;
+}
+
+.slide-content-area {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* 5. Ações Sequenciais (data-step Mechanism) */
+[data-step] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: var(--transition-step);
+  pointer-events: none;
+}
+[data-step].active-step {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* 6. Componentes Reutilizáveis (Cards, Hero e Sínteses) */
+
+/* Hero (Capa Monumental) */
+.hero-wrapper {
+  max-width: 1200px;
+  width: 85%;
+  text-align: left;
+  z-index: 20;
+}
+.hero-subtitle {
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-weight: 700;
+  color: var(--color-orange);
+  margin-bottom: 1.2rem;
+}
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: 4rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.hero-title span {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.7);
+  margin-top: 1.2rem;
+}
+.hero-meta {
+  margin-top: 4rem;
+  display: flex;
+  gap: 3rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.5);
+}
+.hero-meta strong {
+  display: block;
+  font-size: 1rem;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  margin-top: 0.3rem;
+}
+
+/* Cards de Informação e Estatísticas */
+.stat-card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 2.2rem 1.8rem;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+  box-shadow: 0 4px 20px rgba(11,30,54,0.02);
+}
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(11,30,54,0.06);
+}
+.stat-num {
+  font-family: var(--font-serif);
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  line-height: 1;
+  margin-bottom: 0.6rem;
+}
+.slide-section.dark .stat-card {
+  background: var(--color-card-bg-dark);
+  border: 1px solid var(--color-border-dark);
+}
+.slide-section.dark .stat-num {
+  color: var(--color-orange);
+}
+.stat-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.6rem;
+}
+.stat-desc {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-gray-light);
+}
+
+/* Coluna de Síntese e Listas */
+.sintese-col-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-orange);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+.sintese-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sintese-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  line-height: 1.6;
+}
+.sintese-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-orange);
+}
+
+/* Referências */
+.ref-list .ref-item {
+  border-left: 2px solid rgba(255,255,255,0.25);
+  padding-left: 1rem;
+}
+.ref-item strong {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+  color: #FFFFFF;
+}
+.ref-item span {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.4;
+  display: block;
+}
+
+/* 7. Indicador Lateral Dinâmico */
+.indicator-container {
+  position: fixed;
+  right: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 900;
+  transition: var(--transition-fade);
+}
+.indicator {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.indicator-index {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-gray-light);
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.indicator-index.expand {
+  opacity: 1;
+  color: var(--color-orange);
+  transform: scale(1.2);
+}
+.indicator-line {
+  width: 1px;
+  height: 25px;
+  background-color: var(--color-border);
+}
+.slide-section.dark ~ .indicator-container .indicator-line {
+  background-color: var(--color-border-dark);
+}

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Apresentador — FabSlides</title>
+  <style>
+    /* Estilos Simplificados Creme & Marinho do Console */
+    :root {
+      --color-cream: #FDFBF8;
+      --color-navy: #0B1E36;
+      --color-orange: #E05A10;
+      --color-border: rgba(11,30,54,0.1);
+      --font-sans: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-cream);
+      color: var(--color-navy);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    /* Cabeçalho */
+    header {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--color-border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+    header h1 { font-size: 1.2rem; font-weight:700; }
+    .session-indicator { font-size:0.85rem; color: var(--color-orange); font-weight:700; }
+
+    /* Área Principal Grid */
+    .main-container {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      flex-grow: 1;
+      height: calc(100vh - 120px);
+      position: relative;
+    }
+
+    /* Coluna Lateral de Miniaturas */
+    .thumbnails-col {
+      border-right: 1px solid var(--color-border);
+      overflow-y: auto;
+      padding: 1.5rem;
+      background: #F9F7F4;
+    }
+    .thumb-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.8rem;
+      margin-bottom: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .thumb-card.active {
+      border-color: var(--color-orange);
+      box-shadow: 0 4px 15px rgba(224,90,16,0.1);
+    }
+    .thumb-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem; }
+    
+    /* Wrapper do Iframe Proporcional 16:9 */
+    .slide-thumbnail-wrapper {
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 aspect ratio */
+      position: relative;
+      background: #000;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .slide-thumbnail-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: none;
+      pointer-events: none;
+    }
+
+    /* Área de Conteúdo / Notas de Apoio */
+    .content-area {
+      overflow-y: auto;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .notes-section {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 20px rgba(11,30,54,0.01);
+    }
+    .notes-section h2 { font-size:1.6rem; margin-bottom: 1rem; border-left: 4px solid var(--color-orange); padding-left: 0.8rem; }
+    .talking-points { font-size: 1.1rem; line-height: 1.8; margin-top: 1rem; }
+    .talking-points li { margin-bottom: 0.8rem; }
+
+    /* Barra de Navegação e Rodapé */
+    footer {
+      background: #FFFFFF;
+      border-top: 1px solid var(--color-border);
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+    .nav-buttons { display: flex; gap: 1rem; }
+    .btn {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: var(--color-orange); }
+    .btn-secondary { background: #E4E1DB; color: var(--color-navy); }
+    .btn-secondary:hover { background: #D5D1C9; }
+
+    /* Gaveta de Referência PDF Retrátil */
+    .drawer-btn {
+      position: fixed;
+      right: 20px;
+      bottom: 85px;
+      z-index: 200;
+    }
+    .pdf-drawer {
+      position: fixed;
+      top: 0;
+      right: -620px;
+      width: 600px;
+      height: 100%;
+      background: #FFFFFF;
+      border-left: 1px solid var(--color-border);
+      z-index: 150;
+      transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: -5px 0 25px rgba(11,30,54,0.08);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .pdf-drawer.open { right: 0; }
+    .pdf-drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .pdf-drawer-content { flex-grow: 1; border: 1px solid var(--color-border); }
+  </style>
+</head>
+<body>
+
+  <!-- CABEÇALHO -->
+  <header>
+    <h1>FabSlides Presenter Console</h1>
+    <div class="session-indicator" id="session-badge">Sala WS: ---</div>
+  </header>
+
+  <!-- ÁREA DE GRID PRINCIPAL -->
+  <div class="main-container">
+    
+    <!-- COLUNA DE THUMBNAILS -->
+    <div class="thumbnails-col" id="thumbnails-list">
+      <!-- Cards de Slide -->
+      <div class="thumb-card active" data-index="0">
+        <p class="thumb-title">01 · Capa da Apresentação</p>
+        <div class="slide-thumbnail-wrapper">
+          <iframe data-src="../index.html?presenter=true#slide-01"></iframe>
+        </div>
+      </div>
+      <div class="thumb-card" data-index="1">
+        <p class="thumb-title">02 · Exemplo Prático</p>
+        <div class="slide-thumbnail-wrapper">
+          <iframe data-src="../index.html?presenter=true#slide-02"></iframe>
+        </div>
+      </div>
+      <div class="thumb-card" data-index="2">
+        <p class="thumb-title">03 · Síntese & Referências</p>
+        <div class="slide-thumbnail-wrapper">
+          <iframe data-src="../index.html?presenter=true#slide-03"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTAS DO APRESENTADOR / TEXTOS -->
+    <div class="content-area">
+      <div class="notes-section" id="notes-content">
+        <h2 id="slide-label">Slide 01</h2>
+        <h3 id="slide-name" style="font-size:1.2rem; color:var(--color-orange); margin-bottom: 1rem;">Capa</h3>
+        <ul class="talking-points" id="talking-points-list">
+          <li><strong>Abertura:</strong> Apresente a nova ferramenta de slides.</li>
+          <li><strong>Filosofia:</strong> Explique o motor de autoevolução dinâmico.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTAO GAVETA PDF -->
+  <button class="btn drawer-btn" id="toggle-drawer-btn">Biblioteca PDF</button>
+
+  <!-- GAVETA LATERAL PDF -->
+  <div class="pdf-drawer" id="pdf-drawer">
+    <div class="pdf-drawer-header">
+      <h3>Visualizador de Referências</h3>
+      <button class="btn btn-secondary" id="close-drawer-btn">Fechar</button>
+    </div>
+    <div class="pdf-drawer-content">
+      <iframe id="pdf-viewer" src="about:blank" width="100%" height="100%"></iframe>
+    </div>
+  </div>
+
+  <!-- RODAPÉ & BOTOES NAVEGAÇÃO -->
+  <footer>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" id="btn-prev-step">Voltar Ação</button>
+      <button class="btn btn-secondary" id="btn-next-step">Avançar Ação</button>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn" id="btn-prev-slide">Slide Anterior</button>
+      <button class="btn" id="btn-next-slide">Próximo Slide</button>
+    </div>
+  </footer>
+
+  <script>
+    // LÓGICA DE CONTROLES DO COCKPIT
+    const cards = document.querySelectorAll('.thumb-card');
+    const talkingPoints = {
+      0: {
+        label: "Slide 01 · Capa",
+        title: "Capa do Slide Boilerplate",
+        points: ["Abertura: Apresente o projeto de apresentações.", "Filosofia: Explique o motor de autoevolução dinâmico."]
+      },
+      1: {
+        label: "Slide 02 · Exemplo Prático",
+        title: "Storytelling por Passos",
+        points: ["Mecanismo: Explique o uso das setas para revelação.", "Classificação: Destaque a importância da ordem de elementos."]
+      },
+      2: {
+        label: "Slide 03 · Conclusão",
+        title: "Síntese e Referências",
+        points: ["Conclusão: Resuma os principais ganhos teóricos.", "Referências: Cite as normas e links fundamentais."]
+      }
+    };
+
+    let activeIdx = 0;
+
+    function selectSlide(idx) {
+      activeIdx = idx;
+      cards.forEach((card, i) => {
+        card.classList.toggle('active', i === idx);
+        const iframe = card.querySelector('iframe');
+        if (i === idx && iframe && !iframe.src) {
+          iframe.src = iframe.dataset.src;
+        }
+      });
+
+      // Atualiza textos
+      const data = talkingPoints[idx];
+      document.getElementById('slide-label').innerText = data.label;
+      document.getElementById('slide-name').innerText = data.title;
+      
+      const list = document.getElementById('talking-points-list');
+      list.innerHTML = data.points.map(pt => `<li>${pt}</li>`).join('');
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        selectSlide(parseInt(card.dataset.index, 10));
+      });
+    });
+
+    // SISTEMA DE ESCALA MATEMÁTICA THUMBNAIL
+    function scaleThumbnails() {
+      const wrappers = document.querySelectorAll('.slide-thumbnail-wrapper');
+      wrappers.forEach(wrap => {
+        const iframe = wrap.querySelector('iframe');
+        const width = wrap.getBoundingClientRect().width;
+        const scale = width / 1920;
+        
+        iframe.style.width = '1920px';
+        iframe.style.height = '1080px';
+        iframe.style.transform = `scale(${scale})`;
+        iframe.style.transformOrigin = 'top left';
+      });
+    }
+
+    window.addEventListener('resize', scaleThumbnails);
+    window.addEventListener('load', () => {
+      scaleThumbnails();
+      selectSlide(0); // Força inicialização do primeiro iframe
+    });
+
+    // CONTROLES DE AÇÃO GAVETA PDF
+    const drawer = document.getElementById('pdf-drawer');
+    const pdfViewer = document.getElementById('pdf-viewer');
+    
+    document.getElementById('toggle-drawer-btn').addEventListener('click', () => {
+      drawer.classList.add('open');
+      pdfViewer.src = "../material/Referencia.pdf#page=1";
+    });
+    document.getElementById('close-drawer-btn').addEventListener('click', () => {
+      drawer.classList.remove('open');
+      pdfViewer.src = "about:blank";
+    });
+  </script>
+</body>
+</html>

@@ -200,13 +200,20 @@ O motor genérico adiciona `.active-step` sequencialmente. Nenhuma lógica imper
 
 ---
 
-### Feature 2: Slide de Contraste Semântico (Split-Screen / Tela Dividida)
+### Feature 2: Slide de Contraste Semântico (Eixo A vs. Eixo B)
 
-Esta feature é usada para criar um choque visual e conceitual direto entre duas perspectivas (ex: "Antes vs. Depois", "Tradicional vs. Lean", "Teoria vs. Prática"). Funciona semântica e visualmente como **"dois slides dentro de um"** dividindo a tela perfeitamente em 50/50.
+Esta categoria é usada para criar um choque visual e conceitual direto entre duas perspectivas (ex: "Antes vs. Depois", "Tradicional vs. Lean", "Pilares Ativos vs. Gargalos"). Funciona semântica e visualmente como **"dois slides dentro de um"** dividindo a atenção do espectador em dois eixos de storytelling.
 
-#### 1. HTML Declarativo e Mapeamento Humano (3 Níveis)
+A engine do FabSlides expõe **duas variações visuais** para esta mesma categoria:
+
+---
+
+#### Variação A: Split-Screen (Full-Bleed / Tela Dividida)
+Ocupa 100% da viewport dividida ao meio, ideal para apresentar conceitos antagônicos monumentais (Design do Slide 04).
+
+##### 1. HTML Declarativo e Mapeamento Humano (3 Níveis)
 ```html
-<section class="slide-section full-bleed" id="slide-contraste">
+<section class="slide-section full-bleed" id="slide-contraste-split">
   <div class="slide-frame">
     <!-- Nível 1 (Cabeçalho): Cabeçalho Ancorador Global -->
     <header class="slide-header" style="padding-left: 5rem;">
@@ -219,21 +226,20 @@ Esta feature é usada para criar um choque visual e conceitual direto entre duas
         
         <!-- Coluna Esquerda: Argumento A -->
         <div class="theory-split-col dark-side" data-step="1">
-          <!-- Nível 2 (Componente): Badge [Identificador de contexto/categoria] -->
+          <!-- Nível 2 (Componente): Badge -->
           <div class="agro-card-badge">Visão Tradicional</div>
           
-          <!-- Nível 2 (Componente): Título do Argumento [Tema principal abordado] -->
+          <!-- Nível 2 (Componente): Título do Argumento -->
           <h3 class="agro-card-title">O Modelo de Conversão</h3>
           
           <p class="agro-card-text">
-            <!-- Nível 2 (Componente): Título do Contraponto [Chamada impactante / Tese] -->
+            <!-- Nível 2 (Componente): Título do Contraponto -->
             <strong>A ilusão de enxergar apenas a tarefa</strong><br>
-            
-            <!-- Nível 2 (Componente): Definição do Contraponto [Texto descritivo / Conceito] -->
+            <!-- Nível 2 (Componente): Definição do Contraponto -->
             Enxerga a produção como uma sequência de transformações mecânicas isoladas...
           </p>
           
-          <!-- Nível 2 (Componente): Consequência [O impacto prático causado pelo argumento - Opcional] -->
+          <!-- Nível 2 (Componente): Consequência -->
           <div class="highlight-impact">
             Consequência: <em>Otimizações locais ineficazes que geram desperdício.</em>
           </div>
@@ -241,21 +247,15 @@ Esta feature é usada para criar um choque visual e conceitual direto entre duas
 
         <!-- Coluna Direita: Argumento B -->
         <div class="theory-split-col light-side" data-step="2">
-          <!-- Nível 2 (Componente): Badge [Identificador de contexto/categoria] -->
+          <!-- Nível 2 (Componente): Badge -->
           <div class="agro-card-badge">Abordagem de Fluxos</div>
-          
-          <!-- Nível 2 (Componente): Título do Argumento [Tema principal abordado] -->
+          <!-- Nível 2 (Componente): Título do Argumento -->
           <h3 class="agro-card-title">A Teoria de Fluxos</h3>
-          
           <p class="agro-card-text">
-            <!-- Nível 2 (Componente): Título do Contraponto [Chamada impactante / Tese] -->
             <strong>A distinção científica de Koskela (1992)</strong><br>
-            
-            <!-- Nível 2 (Componente): Definição do Contraponto [Texto descritivo / Conceito] -->
             Demonstra que a produção é constituída por duas dimensões...
           </p>
-          
-          <!-- Nível 2 (Componente): Consequência [O impacto prático causado - Opcional] -->
+          <!-- Nível 2 (Componente): Consequência -->
           <div class="highlight-impact">
             Consequência: <em>Foco expandido para reduzir tempos de fluxo inútil.</em>
           </div>
@@ -267,32 +267,85 @@ Esta feature é usada para criar um choque visual e conceitual direto entre duas
 </section>
 ```
 
-#### 2. CSS Canônico (Físicas de Contraste)
+---
+
+#### Variação B: Cards Pareados (Centered Grid / Diagnóstico Balanceado)
+Mantém o cabeçalho fixo no topo e divide a área útil central em cartões amplos lado a lado, ideal para diagnósticos e aplicações críticas de teoria (Design do Slide 07).
+
+##### 1. HTML Declarativo e Mapeamento Humano (3 Níveis)
+```html
+<section class="slide-section" id="slide-contraste-cards">
+  <div class="slide-frame">
+    <!-- Nível 1 (Cabeçalho): Cabeçalho Ancorador Global -->
+    <header class="slide-header">
+      <p class="slide-category">07 · Análise Crítica</p>
+      <h2 class="slide-title">Aplicação dos Princípios ao Processo Real</h2>
+    </header>
+
+    <div class="slide-content-area" data-content>
+      <div class="agro-analysis-container">
+        
+        <!-- Cartão Esquerda: Diagnóstico A -->
+        <div class="agro-card" data-step="1">
+          <!-- Nível 2 (Componente): Badge -->
+          <div class="agro-card-badge active"><span>✅ Pilares Ativos</span></div>
+          
+          <!-- Nível 2 (Componente): Título do Argumento -->
+          <h3 class="agro-card-title">Valor & Perfeição</h3>
+          
+          <!-- Nível 2 (Componente): Definição do Contraponto -->
+          <p class="agro-card-text">
+            O valor sensorial e a busca por perfeição através de regulação operam ativamente...
+          </p>
+        </div>
+
+        <!-- Cartão Direita: Diagnóstico B -->
+        <div class="agro-card" data-step="2">
+          <!-- Nível 2 (Componente): Badge -->
+          <div class="agro-card-badge alert"><span>⚠️ Gargalos Estruturais</span></div>
+          
+          <!-- Nível 2 (Componente): Título do Argumento -->
+          <h3 class="agro-card-title">Fluxo Contínuo & Produção Puxada</h3>
+          
+          <!-- Nível 2 (Componente): Definição do Contraponto -->
+          <p class="agro-card-text">
+            A linearidade esbarra nas restrições biológicas e na janela sazonal de safra...
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+##### 2. CSS Canônico da Variação B (Cards Pareados)
 ```css
-/* Container de Tela Dividida */
-.theory-split-container {
+.agro-analysis-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  width: 100vw;
-  height: 100vh;
+  gap: 3.5rem;
+  width: 100%;
 }
 
-/* Colunas Individuais */
-.theory-split-col {
-  padding: 5rem 6rem;
+.agro-card {
+  background: var(--color-card-bg);
+  padding: 3.5rem;
+  border-radius: 8px;
+  box-shadow: 0 15px 40px rgba(11, 30, 54, 0.03);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 1.8rem;
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s ease;
 }
 
-/* Física: Começam Ocultas e Sobem */
-.theory-split-col[data-step] {
+/* Fisica: Entrada em Cascata */
+.agro-card[data-step] {
   opacity: 0;
   transform: translateY(20px);
 }
 
-.theory-split-col[data-step].active-step {
+.agro-card[data-step].active-step {
   opacity: 1;
   transform: translateY(0);
 }

@@ -306,97 +306,128 @@ Esta feature é usada para criar um choque visual e conceitual direto entre duas
 }
 ```
 
----
+### Feature 3: Slide de Explicação de Teoria (Citation + Principle Cards)
 
-## 6. Protocolo de Sincronização WebSocket
+Esta feature foi criada especificamente para apresentar novos referenciais teóricos e escolas de pensamento acadêmico. Funciona dividindo o slide horizontalmente em duas fases: a **Ambientação Teórica** (foco na citação e na obra) e a **Exploração de Pilares** (cards ou itens revelados progressivamente com os princípios contrapostos).
 
-### 6.1 Fluxo de Mensagens
+#### 1. HTML Declarativo e Mapeamento Humano (3 Níveis)
+```html
+<section class="slide-section dark" id="slide-teoria-exemplo">
+  <div class="slide-frame">
+    <!-- Nível 1 (Cabeçalho): Cabeçalho Ancorador Global -->
+    <header class="slide-header">
+      <p class="slide-category">06 · Fundamentação Teórica</p>
+      <h2 class="slide-title">Os Pilares da Escola Clássica</h2>
+    </header>
 
-```mermaid
-sequenceDiagram
-    participant Remote (Celular)
-    participant Server (Node.js)
-    participant Projector (Host)
+    <div class="slide-content-area" data-content>
+      <div class="theory-wrapper">
+        <div class="theory-block">
+          
+          <!-- Nível 2 (Componente): Bloco de Citação -->
+          <!-- [Humano: Contém a Citação, Autor(es), Ano e Artigo/Obra de referência] -->
+          <div class="theory-icon">“</div>
+          <p class="theory-quote">
+            "Frase de impacto que resume a tese do pensador com fechamento correto de aspas."
+          </p>
+          <p class="theory-ref">Autor(es) (Ano) · Obra de Referência</p>
+          
+          <!-- Nível 2 (Componente): Lista de Princípios -->
+          <!-- [Humano: Lista de cards com contrapontos da teoria para storytelling progressivo] -->
+          <div class="theory-principles-list">
+            
+            <!-- Item 1 (Física: Revelação Elevada) -->
+            <div class="theory-principle-item" data-step="1">
+              <strong>1. Nome do Princípio</strong>
+              <span>Definição rápida de aplicação prática ou contraposição.</span>
+            </div>
 
-    Projector->>Server: register { role: host, sessionId: "8472" }
-    Remote->>Server: register { role: remote, sessionId: "8472" }
-    Server-->>Remote: confirm_connection
+            <!-- Item 2 (Física: Revelação Elevada) -->
+            <div class="theory-principle-item" data-step="2">
+              <strong>2. Segundo Princípio</strong>
+              <span>Nova definição conceitual alinhada à tese.</span>
+            </div>
 
-    Remote->>Server: command { action: "next" }
-    Server->>Projector: command { action: "next" }
-    Projector->>Server: state-update { slideIndex: 3, stepIndex: 2 }
-    Server->>Remote: state-update { slideIndex: 3, stepIndex: 2 }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 ```
 
-### 6.2 Mensagens do Protocolo
+#### 2. CSS Canônico (Layout Teórico)
+```css
+/* Bloco de Citação */
+.theory-block {
+  text-align: left;
+  position: relative;
+}
 
-| Tipo | Payload | Quem envia |
-|---|---|---|
-| `register` | `{ sessionId, role: 'host'|'remote' }` | Projetor e Remoto no onopen |
-| `command` | `{ action: 'next'|'prev' }` | Remoto → Servidor → Projetor |
-| `state-update` | `{ slideIndex, stepIndex }` | Projetor → Servidor → Remoto |
-| `request-state` | `{}` | Remoto ao conectar, para sincronizar teleprompter |
+.theory-icon {
+  font-family: var(--font-title);
+  font-size: 5rem;
+  color: var(--color-orange);
+  line-height: 1;
+  margin-bottom: -1rem;
+}
 
----
+.theory-quote {
+  font-size: 1.8rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--color-text-light);
+  margin-bottom: 2rem;
+}
 
-## 7. Console do Apresentador
+.theory-ref {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  letter-spacing: 0.1em;
+  margin-bottom: 3rem;
+}
 
-### 7.1 Algoritmo de Dimensionamento Matemático (`scaleThumbnails`)
+/* Lista de Princípios */
+.theory-principles-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 2.5rem;
+}
 
-Garante que miniaturas `<iframe>` do Projetor ocupem exatamente 100% da coluna lateral, sem margens escuras, em qualquer resolução de monitor:
+.theory-principle-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
 
-```javascript
-function scaleThumbnails() {
-  document.querySelectorAll('.slide-note-card').forEach(card => {
-    const wrapper = card.querySelector('.slide-thumbnail-wrapper');
-    const iframe  = wrapper.querySelector('iframe');
-    const wrapperWidth  = wrapper.getBoundingClientRect().width;
-    const scaleFactor   = wrapperWidth / 1920; // largura nativa do Projetor
-    iframe.style.width          = '1920px';
-    iframe.style.height         = '1080px';
-    iframe.style.transform      = `scale(${scaleFactor})`;
-    iframe.style.transformOrigin = 'top left';
-  });
+.theory-principle-item strong {
+  font-size: 1.3rem;
+  color: var(--color-text-light);
+}
+
+.theory-principle-item span {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+}
+
+/* Física: Entrada de Itens */
+.theory-principle-item[data-step] {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.theory-principle-item[data-step].active-step {
+  opacity: 1;
+  transform: translateY(0);
 }
 ```
 
-### 7.2 Gaveta de Referências (Reference Drawer)
-
-Painel lateral retrátil que embutie um PDF local diretamente na página correta:
-
-```html
-<iframe src="../material/Artigo.pdf#page=115" width="100%" height="100%"></iframe>
-```
-
 ---
 
-## 8. Instruções para Agentes (AI Prompt)
-
-Ao receber uma tarefa de criar ou modificar uma apresentação FabSlides:
-
-```
-1. Leia este arquivo (FABSLIDES.md) integralmente antes de qualquer ação.
-2. Use o glossário da Seção 2 para todos os nomes — nunca sinônimos informais.
-3. Copie o boilerplate de C:\Users\fabio\OneDrive\Sync\Dev\FabSlides\boilerplate\ como base.
-4. Todo elemento de storytelling recebe data-step="N" + data-step-type="<action-type>".
-5. Consulte a Taxonomia (Seção 4) para escolher o action type correto de cada passo.
-6. Ao criar um novo tipo de animação não catalogado, registre-o na Seção 4 antes de continuar.
-7. Após qualquer funcionalidade nova, atualize a Feature Library (Seção 5).
-8. Nunca reescreva arquivos inteiros — use substituições direcionadas (DiffBlocks).
-```
-
----
-
-## 9. Histórico de Versões
-
-| Versão | Data | O que mudou |
-|---|---|---|
-| v1.0 | — | Estrutura básica de scroll e reveal simples |
-| v2.0 | — | Storytelling por Steps (`data-step` + interceptor de teclado) |
-| v3.0 | — | Multi-Device Sync: Console, Remoto e WebSocket |
-| v4.0 | — | Algoritmo `scaleThumbnails` para previews matemáticos |
-| v4.1 | 2026-05-26 | Rebrand para FabSlides · Criação do `FABSLIDES.md` canônico · Início da Taxonomia de Action Types |
-
----
-
-*FABSLIDES.md — Skill Técnica Canônica. Atualizar após cada sessão de desenvolvimento.*
+## 6. Protocolo de Sincronização WebSocket
